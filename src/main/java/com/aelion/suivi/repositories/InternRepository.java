@@ -5,7 +5,9 @@ package com.aelion.suivi.repositories;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.aelion.suivi.entities.InternEntity;
 
@@ -36,5 +38,8 @@ public interface InternRepository extends CrudRepository<InternEntity, Long> {
 	public List<InternEntity> findByName(String name);
 
 	public List<InternEntity> findByFirstName(String firstName);
+
+	@Query("SELECT i FROM InternEntity i WHERE i.email = ':email'")
+	public InternEntity internByMail(@Param("email") String email);
 
 }

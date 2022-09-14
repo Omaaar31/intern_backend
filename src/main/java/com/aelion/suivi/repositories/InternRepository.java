@@ -39,7 +39,7 @@ public interface InternRepository extends CrudRepository<InternEntity, Long> {
 
 	public List<InternEntity> findByFirstName(String firstName);
 
-	@Query("SELECT i FROM InternEntity i WHERE i.email = ':email'")
+	@Query("SELECT i FROM InternEntity i WHERE i.email = :email")
 	public InternEntity internByMail(@Param("email") String email);
 
 }

@@ -7,16 +7,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.aelion.suivi.entities.POEEntity;
 import com.aelion.suivi.repositories.POERepository;
+import com.aelion.suivi.services.exception.NotFoundException;
 
 /**
  * @author Aelion
  *
  */
-
 @Service
 public class POEService implements ICrud<POEEntity> {
 
@@ -25,6 +26,7 @@ public class POEService implements ICrud<POEEntity> {
 
 	@Override
 	public POEEntity add(POEEntity t) {
+		// TODO Auto-generated method stub
 		return this.repository.save(t);
 	}
 
@@ -36,31 +38,23 @@ public class POEService implements ICrud<POEEntity> {
 
 	@Override
 	public void update(POEEntity t) {
+		// TODO Auto-generated method stub
 		this.repository.save(t);
-
 	}
 
 	@Override
 	public void delete(POEEntity t) {
-		this.repository.delete(t);
+		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void delete(Long id) throws Exception {
-		Optional<POEEntity> pEntity = this.findOne(id);
-		if (pEntity.isPresent()) {
-			try {
-				this.repository.deleteById(id.intValue());
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException();
-			}
-		} else {
-			throw new Exception("POE with id : " + id + " was not found !");
-		}
+	public ResponseEntity<?> delete(Long id) throws Exception {
+		return null;
 	}
 
 	@Override
 	public List<POEEntity> findAll() {
+		// TODO Auto-generated method stub
 		return (List<POEEntity>) this.repository.findAll();
 	}
 
@@ -68,6 +62,7 @@ public class POEService implements ICrud<POEEntity> {
 	public Optional<POEEntity> findOne(Long id) {
 		// TODO Auto-generated method stub
 		return this.repository.findById(id.intValue());
+
 	}
 
 	public POEEntity getOne(Long id) throws Exception {
@@ -75,22 +70,9 @@ public class POEService implements ICrud<POEEntity> {
 
 		if (oEntity.isPresent()) {
 			return oEntity.get();
+		} else {
+			throw new NotFoundException("the POE with " + id + " not found");
 		}
-		throw new Exception("the POE with " + id + " not found");
 	}
-	/*
-	 * public void populate() { POEEntity poe = new POEEntity(); poe.setId(1);
-	 * poe.setName("Java"); poe.setBeginDate(2022-07-18);
-	 * poe.setEndDate("2022-10-19");
-	 * 
-	 * this.poe.add(poe);
-	 * 
-	 * poe = new POEEntity(); poe.setId(2L); poe.setName("Bond");
-	 * poe.setFirstName("James"); poe.setEmail("bjames@gmail.com");
-	 * 
-	 * this.poe.add(poe);
-	 * 
-	 * }
-	 */
 
 }

@@ -4,10 +4,12 @@
 package com.aelion.suivi.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,48 +27,56 @@ import com.aelion.suivi.services.exception.NotFoundException;
  * @author Aelion
  *
  */
-
 @RestController
 @RequestMapping("/poe")
 public class POEController {
 
 	@Autowired
-	private POEService poeService;
-
-	public ResponseEntity<String> greetings() {
-		return ResponseEntity.ok("Hello SpringBoot");
-	}
+	private POEService service;
 
 	@GetMapping()
-	public List<POEEntity> getAll() {
-		return this.poeService.findAll();
+	@CrossOrigin
+	public ResponseEntity<?> findAll() {
+		Optional<List<POEEntity>> oPOEEntities = Optional.ofNullable(this.service.findAll());
+		if (oPOEEntities.isPresent()) {
+			return ResponseEntity.ok(oPOEEntities.get());
+		}
+		return ResponseEntity.notFound().build();
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> findOne(@PathVariable int id) throws Exception {
 		try {
-			return ResponseEntity.ok(this.poeService.getOne((long) id));
+			return ResponseEntity.ok(this.service.getOne((long) id));
 		} catch (NotFoundException e) {
 			// TODO Auto-generated catch block
+			// return ResponseEntity.notFound().build();
+
 			return e.send();
 		}
 	}
 
 	@PostMapping()
 	public POEEntity add(@RequestBody POEEntity poe) {
-		return this.poeService.add(poe);
+		return this.service.add(poe);
 	}
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody POEEntity poe) {
-		this.poeService.update(poe);
+		this.service.update(poe);
 		return ResponseEntity.noContent().build();
 	}
 
+	/**
+	 * DELETE http://127.0.0.1/poe/999
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable int id) {
 		try {
-			this.poeService.delete((long) id);
+			this.service.delete((long) id);
 			return ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<String>("Id was not provided", HttpStatus.BAD_REQUEST);
@@ -74,4 +84,5 @@ public class POEController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+
 }

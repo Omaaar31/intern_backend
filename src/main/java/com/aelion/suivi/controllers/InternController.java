@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aelion.suivi.dto.InternShortListDto;
 import com.aelion.suivi.entities.InternEntity;
 import com.aelion.suivi.services.InternService;
+import com.aelion.suivi.services.exception.NotFoundException;
 
 /**
  * @author Aelion
@@ -57,6 +59,7 @@ public class InternController {
 	 */
 
 	@GetMapping("/{id}")
+	@CrossOrigin
 	public ResponseEntity<?> getOne(@PathVariable Long id) {
 		Optional<InternEntity> optionalInternEntity = this.internService.findOne(id);
 
@@ -71,11 +74,16 @@ public class InternController {
 		return this.internService.add(intern);
 	};
 
-	@DeleteMapping()
+	@DeleteMapping("/{id}")
 	@CrossOrigin
-	public ResponseEntity<Object> delete(@RequestBody InternEntity intern) {
-		this.internService.delete(intern);
-		return ResponseEntity.noContent().build(); // Return status http (204)
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		try {
+			this.internService.delete(id);
+			return ResponseEntity.noContent().build(); // Return status http (204)
+
+		} catch (NotFoundException e) {
+			return e.send();
+		}
 	}
 
 	@PutMapping()
@@ -92,5 +100,10 @@ public class InternController {
 	@GetMapping("/byfirstname/{firstName}")
 	public List<InternEntity> findByFirstName(@PathVariable String firstName) {
 		return this.internService.findByFirstname(firstName);
+	}
+
+	@GetMapping("/byemail")
+	public InternEntity byEmail(@RequestParam() String email) {
+		return this.internService.byEmail(email);
 	}
 }

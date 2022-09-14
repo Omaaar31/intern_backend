@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
  * @author Aelion
  *
  */
-public class NotFoundException extends Exception {
+public class NotFoundException extends Exception implements HttpErrorInterface {
 	public NotFoundException() {
 		super();
 	}

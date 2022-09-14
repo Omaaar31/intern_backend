@@ -1,24 +1,21 @@
-/**
- * 
- */
 package com.aelion.suivi.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * @author Aelion
- *
- */
-
-@Entity
+@Entity()
 @Table(name = "poe")
-
 public class POEEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +24,13 @@ public class POEEntity {
 	private Date beginDate;
 	private Date endDate;
 
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
+	@ManyToOne()
+	private POETypeEntity poeType;
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+	@ManyToMany()
+	@JoinTable(name = "interns_to_poes", joinColumns = @JoinColumn(name = "poe_id"), inverseJoinColumns = @JoinColumn(name = "intern_id"))
+
+	private List<InternEntity> interns = new ArrayList<>();
 
 	/**
 	 * @return the name
@@ -81,6 +72,27 @@ public class POEEntity {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @return the poeType
+	 */
+	public POETypeEntity getPoeType() {
+		return poeType;
+	}
+
+	/**
+	 * @param poeType the poeType to set
+	 */
+	public void setPoeType(POETypeEntity poeType) {
+		this.poeType = poeType;
 	}
 
 }

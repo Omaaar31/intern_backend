@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.aelion.suivi.dto.InternShortListDto;
 import com.aelion.suivi.entities.InternEntity;
 import com.aelion.suivi.repositories.InternRepository;
+import com.aelion.suivi.services.exception.NotFoundException;
 
 /**
  * @author Aelion
@@ -45,7 +47,6 @@ public class InternService implements ICrud<InternEntity> {
 	@Override
 	public void delete(InternEntity t) {
 		this.repository.delete(t);
-
 	}
 
 	@Override
@@ -70,9 +71,13 @@ public class InternService implements ICrud<InternEntity> {
 	}
 
 	@Override
-	public void delete(Long id) {
-		// TODO Auto-generated method stub
-
+	public ResponseEntity<?> delete(Long id) throws NotFoundException {
+		try {
+			this.repository.deleteById(id);
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public List<InternEntity> findByName(String name) {
@@ -83,4 +88,11 @@ public class InternService implements ICrud<InternEntity> {
 		return this.repository.findByFirstName(firstname);
 	}
 
+	public InternEntity byEmail(String email) {
+		return this.repository.internByMail(email);
+	}
+
+	public boolean emailExists(String email) {
+		return this.repository.internByMail(email) == null ? false : true;
+	}
 }

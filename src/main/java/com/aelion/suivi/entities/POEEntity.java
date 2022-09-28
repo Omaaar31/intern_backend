@@ -95,4 +95,12 @@ public class POEEntity {
 		this.poeType = poeType;
 	}
 
+	public void addIntern(InternEntity intern) {
+		this.interns.add(intern);
+	}
+
+	public void deleteIntern(InternEntity intern) {
+		this.interns.remove(intern);
+	}
+
 }

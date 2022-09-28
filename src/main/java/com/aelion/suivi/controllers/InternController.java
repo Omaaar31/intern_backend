@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aelion.suivi.dto.InternInputDTO;
 import com.aelion.suivi.dto.InternShortListDto;
 import com.aelion.suivi.entities.InternEntity;
 import com.aelion.suivi.services.InternService;
-import com.aelion.suivi.services.exception.NotFoundException;
 
 /**
  * @author Aelion
@@ -70,21 +70,27 @@ public class InternController {
 	}
 
 	@PostMapping()
-	public InternEntity add(@RequestBody InternEntity intern) {
-		return this.internService.add(intern);
+	@CrossOrigin
+	public InternEntity add(@RequestBody InternInputDTO intern) {
+		return this.internService.addInternAndPoes(intern);
 	};
 
-	@DeleteMapping("/{id}")
-	@CrossOrigin
-	public ResponseEntity<?> delete(@PathVariable Long id) {
-		try {
-			this.internService.delete(id);
-			return ResponseEntity.noContent().build(); // Return status http (204)
-
-		} catch (NotFoundException e) {
-			return e.send();
-		}
+	@DeleteMapping()
+	@CrossOrigin()
+	public ResponseEntity<Object> delete(@RequestBody InternInputDTO intern) {
+		this.internService.deleteInternAndPoes(intern);
+		return ResponseEntity.noContent().build();
 	}
+
+	/*
+	 * @DeleteMapping("/{id}")
+	 * 
+	 * @CrossOrigin public ResponseEntity<?> delete(@PathVariable Long id) { try {
+	 * this.internService.delete(id); return ResponseEntity.noContent().build(); //
+	 * Return status http (204)
+	 * 
+	 * } catch (NotFoundException e) { return e.send(); } }
+	 */
 
 	@PutMapping()
 	public ResponseEntity<?> update(@RequestBody InternEntity intern) {
@@ -103,7 +109,8 @@ public class InternController {
 	}
 
 	@GetMapping("/byemail")
-	public InternEntity byEmail(@RequestParam() String email) {
+	@CrossOrigin
+	public ResponseEntity<?> byEmail(@RequestParam() String email) {
 		return this.internService.byEmail(email);
 	}
 }
